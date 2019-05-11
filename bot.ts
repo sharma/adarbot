@@ -22,7 +22,6 @@ bot.on('message', function(event) {
             }
         })
         .then(function (response) {
-            console.log(response.data.open);
             var mcap = response.data.marketCap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             event.reply("Symbol: " + response.data.symbol + " | Price: $" + response.data.latestPrice + " | Change: $" + response.data.change + " | P/E: " + response.data.peRatio + " | MCAP: $" + mcap);
         });
