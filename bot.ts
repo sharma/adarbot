@@ -15,22 +15,15 @@ bot.on('registered', function(event) {
 bot.on('message', function(event) {
     if (event.message.match(/^\.st(ock)?/)) {
         var to_join = event.message.split(' ');
-        axios.get('https://www.alphavantage.co/query', {
+        var query = 'https://cloud.iexapis.com/stable/stock/' + to_join[1] + '/quote';
+        axios.get(query, {
             params: {
-                function: 'GLOBAL_QUOTE',
-                symbol: to_join[1],
-                apikey: process.env.API_KEY
+                token: process.env.API_KEY
             }
         })
         .then(function (response) {
-            var symbol = response.data["Global Quote"]["01. symbol"];
-            var open = response.data["Global Quote"]["02. open"]
-            var high = response.data["Global Quote"]["03. high"]
-            var low = response.data["Global Quote"]["04. low"]
-            var price = response.data["Global Quote"]["05. price"];
-           
-            event.reply("Symbol: " + symbol + ", Price: " + price);
-            console.log(response.data);
+            console.log(response.data.open);
+            event.reply("Symbol: " + response.data.symbol + " - Price: " + response.data.latestPrice + " - Open: " + response.data.open + " - Change: " + response.data.change + " P/E: " + response.data.peRatio + " MCAP: " + response.data.marketCap);
         });
     }
 });
