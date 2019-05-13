@@ -25,22 +25,25 @@ bot.on('message', function(event) {
         .then(function (response) {
             var mcap = response.data.marketCap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             var change;
+            var changePercent;
             if (response.data.change < 0) {
               change = c.red(response.data.change.toFixed(2));
+              changePercent = c.red(100 * response.data.changePercent.toFixed(3))
             }
             else if (response.data.change > 0) {
               change = c.green(response.data.change.toFixed(2));
+              changePercent = c.green(100 * response.data.changePercent.toFixed(4))
             }
             else {
               change = response.data.change.toFixed(2);
+              changePercent = 100 * response.data.changePercent.toFixed(4);
             }
             event.reply(response.data.symbol + 
             " | " + c.bold(response.data.companyName) + 
-            " | Price: " + response.data.latestPrice.toFixed(2) + 
-            " | Change: " + change + 
-            " (" + response.data.changePercent.toFixed(2) +  
-            "%) | P/E: " + response.data.peRatio + 
-            " | MCAP: $" + mcap);
+            " | $" + response.data.latestPrice.toFixed(2) + 
+            " | Change: $" + change + 
+            " (" + changePercent +  
+            " %) | MCAP: $" + mcap);
         });
     }
 });
