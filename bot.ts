@@ -23,8 +23,6 @@ bot.on('message', function(event) {
             }
         })
         .then(function (response) {
-
-            
             var mcap = response.data.marketCap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             var change;
             if (response.data.change < 0) {
@@ -36,7 +34,13 @@ bot.on('message', function(event) {
             else {
                 change = response.data.change.toFixed(2);
             }
-            event.reply(response.data.symbol + " | " + c.bold(response.data.companyName) + " | Price: $" + response.data.latestPrice.toFixed(2) + " | Change: $" + change + " | P/E: " + response.data.peRatio + " | MCAP: $" + mcap);
+            event.reply(response.data.symbol + 
+            " | " + c.bold(response.data.companyName) + 
+            " | Price: " + response.data.latestPrice.toFixed(2) + 
+            " | Change: " + change + 
+            " (" + response.data.changePercent.toFixed(2) +  
+            "%) | P/E: " + response.data.peRatio + 
+            " | MCAP: $" + mcap);
         });
     }
 });
