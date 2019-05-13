@@ -18,21 +18,21 @@ bot.on('message', function(event) {
         var to_join = event.message.split(' ');
         var query = 'https://cloud.iexapis.com/stable/stock/' + to_join[1] + '/quote';
         axios.get(query, {
-            params: {
-                token: process.env.API_KEY
+          params: {
+            token: process.env.API_KEY
             }
         })
         .then(function (response) {
             var mcap = response.data.marketCap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             var change;
             if (response.data.change < 0) {
-                change = c.red(response.data.change.toFixed(2));
+              change = c.red(response.data.change.toFixed(2));
             }
             else if (response.data.change > 0) {
-                change = c.green(response.data.change.toFixed(2));
+              change = c.green(response.data.change.toFixed(2));
             }
             else {
-                change = response.data.change.toFixed(2);
+              change = response.data.change.toFixed(2);
             }
             event.reply(response.data.symbol + 
             " | " + c.bold(response.data.companyName) + 
