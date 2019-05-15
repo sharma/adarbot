@@ -36,20 +36,20 @@ bot.on('message', function(event) {
             change = c.green(change);
             changePercent = c.green(changePercent);
           }
-          else {
-            changePercent = c.stripColors(changePercent);
-          }
 
           event.reply(
             response.data.symbol + 
-          " | " + c.bold(response.data.companyName) + 
-          " | $" + response.data.latestPrice.toFixed(2) + 
-          " " + change + 
-          " " + changePercent +  
-          " | MCAP: $" + formattedMCAP(response.data.marketCap));
-        });
+            " | " + c.bold(response.data.companyName) + 
+            " | $" + response.data.latestPrice.toFixed(2) + 
+            " " + change + 
+            " " + changePercent +  
+            " | MCAP: $" + formattedMCAP(response.data.marketCap)
+          );
+        }
+      );
     }
-});
+  }
+);
 
 function formattedMCAP(num) {
   if (num === null) { return null; } // terminate early
