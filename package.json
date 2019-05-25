@@ -1,0 +1,30 @@
+{
+  "name": "stockbot",
+  "version": "1.0.0",
+  "description": "IRC bot to display stock market data",
+  "main": "bot.ts",
+  "dependencies": {
+    "@types/node": "^12.0.2",
+    "axios": "^0.18.0",
+    "irc-colors": "^1.5.0",
+    "irc-framework": "^4.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharma/Stockbot.git"
+  },
+  "keywords": [
+    "stocks",
+    "market"
+  ],
+  "author": "Ankit Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sharma/Stockbot/issues"
+  },
+  "homepage": "https://github.com/sharma/Stockbot#readme"
+}
