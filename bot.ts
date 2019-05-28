@@ -92,8 +92,7 @@ bot.on('message', function(event) {
 
 
 function formattedMCAP(num) {
-  if (num === null) { return null
-    console.log(to_join[i]);; } 
+  if (num === null) { return null; } 
   if (num === 0) { return '0'; } 
   let fixed = 1; 
   const b = (num).toPrecision(2).split("e"), 
