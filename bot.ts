@@ -7,13 +7,14 @@ const bot = new IRC.Client();
 bot.connect({
 	host: 'irc.synirc.net',
 	port: 6667,
-	nick: 'stockbot'
+	nick: 'adarbot'
 });
 
 bot.on('registered', function(event) {
-    bot.join('#cobol');
+    bot.join('#adarbot');
 });
 
+// Stock market plugin
 bot.on('message', function(event) {
   if (event.message.match(/^\,st(ock)?/)) {
     const to_join = event.message.split(' ');
@@ -48,14 +49,57 @@ bot.on('message', function(event) {
   }
 });
 
+// Reddit URL parsing plugin
+bot.on('message', function(event) {
+  if (event.message.match(/reddit.com/)) {
+    const to_join = event.message.split(' ');
+
+    let i;
+    for (i = 0; i < to_join.length; i++) {
+      if (to_join[i].includes('reddit.com')) { break; }
+    }
+
+    if (to_join[i][0] != 'h') {
+      to_join[i] = 'https://' + to_join[i];
+    }
+
+    const query = to_join[i] + '/.json'
+    axios.get(query)
+
+    .then(function (response) {
+
+      let title = response.data[0].data.children[0].data.title;
+      let upvotes = response.data[0].data.children[0].data.ups;
+      let ratio = (response.data[0].data.children[0].data.upvote_ratio) * 100;
+
+      if (ratio >=85) { ratio = c.green(ratio + "%"); }
+      else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
+      else {ratio = c.red(ratio + "%")};
+
+      event.reply(
+        c.bold('reddit') + 
+        " | " + title +
+        " | Upvotes: " + upvotes +
+        " | Upvote Ratio: " + ratio
+      );
+    })
+
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+});
+
+
 function formattedMCAP(num) {
-  if (num === null) { return null; } // terminate early
-  if (num === 0) { return '0'; } // terminate early
-  let fixed = 1; // number of decimal places to show
-  const b = (num).toPrecision(2).split("e"), // get power
-      k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
-      c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), // divide by power
-      d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
-      e = d + ['', 'K', 'M', 'B', 'T'][k]; // append power
+  if (num === null) { return null
+    console.log(to_join[i]);; } 
+  if (num === 0) { return '0'; } 
+  let fixed = 1; 
+  const b = (num).toPrecision(2).split("e"), 
+      k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), 
+      c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), 
+      d = c < 0 ? c : Math.abs(c), 
+      e = d + ['', 'K', 'M', 'B', 'T'][k]; 
   return e;
 }
