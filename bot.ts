@@ -1,6 +1,7 @@
 const IRC = require('irc-framework');
 const axios = require('axios');
 const c = require('irc-colors');
+const he = require('he');
 
 const bot = new IRC.Client();
 
@@ -11,7 +12,7 @@ bot.connect({
 });
 
 bot.on('registered', function(event) {
-    bot.join('#adarbot');
+    bot.join('#cobol');
 });
 
 // Stock market plugin
@@ -45,6 +46,9 @@ bot.on('message', function(event) {
         " " + changePercent +  
         " | MCAP: $" + formattedMCAP(response.data.marketCap)
       );
+    })
+    .catch(function (error) {
+      console.log(error);
     });
   }
 });
@@ -63,24 +67,23 @@ bot.on('message', function(event) {
       to_join[i] = 'https://' + to_join[i];
     }
 
-    const query = to_join[i] + '/.json'
+    const query = to_join[i] + '.json'
     axios.get(query)
-
     .then(function (response) {
 
-      let title = response.data[0].data.children[0].data.title;
-      let upvotes = response.data[0].data.children[0].data.ups;
-      let ratio = (response.data[0].data.children[0].data.upvote_ratio) * 100;
+      const { title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+      let parsedTitle = he.decode(title);
 
-      if (ratio >=85) { ratio = c.green(ratio + "%"); }
+      let ratio = upvote_ratio * 100;
+      if (ratio >=80) { ratio = c.green(ratio + "%"); }
       else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
       else {ratio = c.red(ratio + "%")};
 
       event.reply(
         c.bold('reddit') + 
-        " | " + title +
-        " | Upvotes: " + upvotes +
-        " | Upvote Ratio: " + ratio
+        " | " + parsedTitle +
+        " | Comments: " + num_comments +
+        " | Ratio: " + ratio
       );
     })
 
