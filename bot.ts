@@ -1,6 +1,7 @@
 const IRC = require('irc-framework');
 const axios = require('axios');
 const c = require('irc-colors');
+require('dotenv').config();
 const he = require('he');
 
 const bot = new IRC.Client();
@@ -34,7 +35,7 @@ function stocks(event) {
   const query = 'https://cloud.iexapis.com/stable/stock/' + to_join[1] + '/quote';
   axios.get(query, {
     params: {
-      token: process.env.API_KEY
+      token: process.env.IEX_API_KEY
     }
   })
   .then(function (response) {
