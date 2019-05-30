@@ -18,81 +18,87 @@ bot.on('registered', function(event) {
 // Stock market plugin
 bot.on('message', function(event) {
   if (event.message.match(/^\,st(ock)?/)) {
-    const to_join = event.message.split(' ');
-    const query = 'https://cloud.iexapis.com/stable/stock/' + to_join[1] + '/quote';
-    axios.get(query, {
-      params: {
-        token: process.env.API_KEY
-      }
-    })
-    .then(function (response) {
-      let change = response.data.change.toFixed(2);
-      let changePercent = "(" + (100 * response.data.changePercent.toFixed(4)) + "%)";
-
-      if (response.data.change < 0) {
-        change = c.red(change);
-        changePercent = c.red(changePercent);
-      }
-      else if (response.data.change > 0) {
-        change = c.green(change);
-        changePercent = c.green(changePercent);
-      }
-
-      event.reply(
-        response.data.symbol + 
-        " | " + c.bold(response.data.companyName) + 
-        " | $" + response.data.latestPrice.toFixed(2) + 
-        " " + change + 
-        " " + changePercent +  
-        " | MCAP: $" + formattedMCAP(response.data.marketCap)
-      );
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    stocks(event);
   }
 });
 
 // Reddit URL parsing plugin
 bot.on('message', function(event) {
   if (event.message.match(/reddit.com/)) {
-    const to_join = event.message.split(' ');
-
-    let i;
-    for (i = 0; i < to_join.length; i++) {
-      if (to_join[i].includes('reddit.com')) { break; }
-    }
-
-    if (to_join[i][0] != 'h') {
-      to_join[i] = 'https://' + to_join[i];
-    }
-
-    const query = to_join[i] + '.json'
-    axios.get(query)
-    .then(function (response) {
-
-      const { title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
-      let parsedTitle = he.decode(title);
-
-      let ratio = upvote_ratio * 100;
-      if (ratio >=80) { ratio = c.green(ratio + "%"); }
-      else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
-      else {ratio = c.red(ratio + "%")};
-
-      event.reply(
-        c.bold('reddit') + 
-        " | " + parsedTitle +
-        " | Comments: " + num_comments +
-        " | Ratio: " + ratio
-      );
-    })
-
-    .catch(function (error) {
-      console.log(error);
-    });
+    reddit(event);
   }
 });
 
+function stocks(event) {
+  const to_join = event.message.split(' ');
+  const query = 'https://cloud.iexapis.com/stable/stock/' + to_join[1] + '/quote';
+  axios.get(query, {
+    params: {
+      token: process.env.API_KEY
+    }
+  })
+  .then(function (response) {
+    let change = response.data.change.toFixed(2);
+    let changePercent = "(" + (100 * response.data.changePercent.toFixed(3)) + "%)";
+
+    if (response.data.change < 0) {
+      change = c.red(change);
+      changePercent = c.red(changePercent);
+    }
+    else if (response.data.change > 0) {
+      change = c.green(change);
+      changePercent = c.green(changePercent);
+    }
+
+    event.reply(
+      response.data.symbol + 
+      " | " + c.bold(response.data.companyName) + 
+      " | $" + response.data.latestPrice.toFixed(2) + 
+      " " + change + 
+      " " + changePercent +  
+      " | MCAP: $" + formattedMCAP(response.data.marketCap)
+    );
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+function reddit(event) {
+  const to_join = event.message.split(' ');
+  let i;
+
+  for (i = 0; i < to_join.length; i++) {
+    if (to_join[i].includes('reddit.com')) { 
+      break; 
+    }
+  }
+
+  if (to_join[i][0] != 'h') { to_join[i] = 'https://' + to_join[i]; }
+
+  const query = to_join[i] + '.json'
+  axios.get(query)
+  .then(function (response) {
+    const { title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    let parsedTitle = he.decode(title);
+    let ratio = upvote_ratio * 100;
+    
+    if (ratio >=80) { ratio = c.green(ratio + "%"); }
+    else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
+    else {ratio = c.red(ratio + "%")};
+
+    event.reply(
+      c.bold('reddit') + 
+      " | " + parsedTitle +
+      " | Comments: " + num_comments +
+      " | Ratio: " + ratio
+    );
+  })
+
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 function formattedMCAP(num) {
   if (num === null) { return null; } 
