@@ -9,10 +9,12 @@ const bot = new IRC.Client();
 bot.connect({
 	host: 'irc.synirc.net',
 	port: 6667,
-	nick: 'adarbot'
+  nick: 'adarbot',
+  username: 'adar'
 });
 
 bot.on('registered', function(event) {
+    bot.join('#adarbot');
     bot.join('#cobol');
 });
 
