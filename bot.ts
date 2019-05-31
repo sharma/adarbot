@@ -1,14 +1,14 @@
 const IRC = require('irc-framework');
 const axios = require('axios');
 const c = require('irc-colors');
-require('dotenv').config();
 const he = require('he');
+require('dotenv').config();
 
 const bot = new IRC.Client();
 
 bot.connect({
-	host: 'irc.synirc.net',
-	port: 6667,
+  host: 'irc.synirc.net',
+  port: 6667,
   nick: 'adarbot',
   username: 'adar'
 });
