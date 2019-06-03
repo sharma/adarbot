@@ -41,9 +41,10 @@ function stocks(event) {
       token: process.env.IEX_API_KEY
     }
   })
-  .then(function (response) {
-    let change = response.data.change.toFixed(2);
-    let changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+  .then(function(response) {
+    let {change, changePercent, companyName, symbol, latestPrice, marketCap} = response.data;
+    change = response.data.change.toFixed(2);
+    changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
     if (response.data.change < 0) {
       change = c.red(change);
@@ -55,15 +56,15 @@ function stocks(event) {
     }
 
     event.reply(
-      response.data.symbol + 
-      " | " + c.bold(response.data.companyName) + 
-      " | $" + response.data.latestPrice.toFixed(2) + 
+      symbol + 
+      " | " + c.bold(companyName) + 
+      " | $" + latestPrice.toFixed(2) + 
       " " + change + 
       " " + changePercent +  
-      " | MCAP: $" + formattedMCAP(response.data.marketCap)
+      " | MCAP: $" + formattedMCAP(marketCap)
     );
   })
-  .catch(function (error) {
+  .catch(function(error) {
     console.log(error);
   });
 }
