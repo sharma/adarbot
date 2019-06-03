@@ -14,9 +14,7 @@ bot.connect({
   username: 'adar'
 });
 
-bot.on('close', function() {
-  console.log('Connection closed.');
-});
+bot.on('close', function() { console.log('Connection closed.'); });
 
 bot.on('registered', function(event) {
   bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
