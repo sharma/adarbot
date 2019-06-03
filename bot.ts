@@ -21,7 +21,7 @@ bot.on('close', function() {
 bot.on('registered', function(event) {
     bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
     bot.join('#adarbot');
-    bot.join('#cobol');
+    bot.join("#cobol");
 });
 
 bot.on('message', function(event) {
@@ -45,7 +45,7 @@ function stocks(event) {
   })
   .then(function (response) {
     let change = response.data.change.toFixed(2);
-    let changePercent = "(" + (100 * response.data.changePercent.toFixed(3)) + "%)";
+    let changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
     if (response.data.change < 0) {
       change = c.red(change);
