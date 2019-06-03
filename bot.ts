@@ -15,7 +15,7 @@ bot.connect({
 });
 
 bot.on('close', function() {
-	console.log('Connection closed.');
+  console.log('Connection closed.');
 });
 
 bot.on('registered', function(event) {
