@@ -1,2 +1,6 @@
 # Stockbot
-IRC bot that retrieves stock market data 
+An internet relay chat (IRC) bot written in Node.
+
+Plugins:
+- Stock data
+- reddit link parsing

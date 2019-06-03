@@ -1,32 +1,35 @@
 const IRC = require('irc-framework');
 const axios = require('axios');
 const c = require('irc-colors');
-require('dotenv').config();
 const he = require('he');
+require('dotenv').config();
+require('colors');
 
 const bot = new IRC.Client();
 
 bot.connect({
-	host: 'irc.synirc.net',
-	port: 6667,
+  host: 'irc.synirc.net',
+  port: 6667,
   nick: 'adarbot',
   username: 'adar'
 });
 
+bot.on('close', function() {
+	console.log('Connection closed.');
+});
+
 bot.on('registered', function(event) {
+    bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
     bot.join('#adarbot');
     bot.join('#cobol');
 });
 
-// Stock market plugin
 bot.on('message', function(event) {
+  console.log("<" + event.nick.bold.green + "> " + event.message)
+  
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
   }
-});
-
-// Reddit URL parsing plugin
-bot.on('message', function(event) {
   if (event.message.match(/reddit.com/)) {
     reddit(event);
   }
