@@ -1,4 +1,4 @@
-# Stockbot
+# adarbot
 An internet relay chat (IRC) bot written in Node.
 
 Plugins:
