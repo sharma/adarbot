@@ -19,9 +19,9 @@ bot.on('close', function() {
 });
 
 bot.on('registered', function(event) {
-    bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
-    bot.join('#adarbot');
-    bot.join("#cobol");
+  bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
+  bot.join('#adarbot');
+  bot.join("#cobol");
 });
 
 bot.on('message', function(event) {
