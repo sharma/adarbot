@@ -75,13 +75,9 @@ function reddit(event) {
 
   for (i = 0; i < to_join.length; i++) {
     if (to_join[i].includes('reddit.com')) { 
-      break; 
-    }
-  }
-
-  if (to_join[i]) {
-    if (!to_join[i].includes('http')) { 
-      to_join[i] = 'https://' + to_join[i]; 
+      if (!to_join[i].includes('http')) { 
+        to_join[i] = 'https://' + to_join[i]; 
+      }
     }
   }
 
