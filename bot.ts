@@ -43,14 +43,14 @@ function stocks(event) {
   })
   .then(function(response) {
     let {change, changePercent, companyName, symbol, latestPrice, marketCap} = response.data;
-    change = response.data.change.toFixed(2);
+    change = parseFloat(response.data.change.toFixed(2));
     changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
-    if (response.data.change < 0) {
+    if (change < 0) {
       change = c.red(change);
       changePercent = c.red(changePercent);
     }
-    else if (response.data.change > 0) {
+    else if (change > 0) {
       change = c.green(change);
       changePercent = c.green(changePercent);
     }
@@ -79,7 +79,7 @@ function reddit(event) {
     }
   }
 
-  if (to_join[i][0] != 'h') { to_join[i] = 'https://' + to_join[i]; }
+  if (!to_join[i].includes('http')) { to_join[i] = 'https://' + to_join[i]; }
 
   const query = to_join[i] + '.json'
   axios.get(query)
