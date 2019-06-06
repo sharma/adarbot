@@ -79,7 +79,11 @@ function reddit(event) {
     }
   }
 
-  if (!to_join[i].includes('http')) { to_join[i] = 'https://' + to_join[i]; }
+  if (to_join[i]) {
+    if (!to_join[i].includes('http')) { 
+      to_join[i] = 'https://' + to_join[i]; 
+    }
+  }
 
   const query = to_join[i] + '.json'
   axios.get(query)
