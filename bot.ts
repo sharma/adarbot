@@ -41,29 +41,30 @@ function stocks(event) {
       token: process.env.IEX_API_KEY
     }
   })
-  .then(function (response) {
-    let change = response.data.change.toFixed(2);
-    let changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+  .then(function(response) {
+    let {change, changePercent, companyName, symbol, latestPrice, marketCap} = response.data;
+    change = parseFloat(response.data.change.toFixed(2));
+    changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
-    if (response.data.change < 0) {
+    if (change < 0) {
       change = c.red(change);
       changePercent = c.red(changePercent);
     }
-    else if (response.data.change > 0) {
+    else if (change > 0) {
       change = c.green(change);
       changePercent = c.green(changePercent);
     }
 
     event.reply(
-      response.data.symbol + 
-      " | " + c.bold(response.data.companyName) + 
-      " | $" + response.data.latestPrice.toFixed(2) + 
+      symbol + 
+      " | " + c.bold(companyName) + 
+      " | $" + latestPrice.toFixed(2) + 
       " " + change + 
       " " + changePercent +  
-      " | MCAP: $" + formattedMCAP(response.data.marketCap)
+      " | MCAP: $" + formattedMCAP(marketCap)
     );
   })
-  .catch(function (error) {
+  .catch(function(error) {
     console.log(error);
   });
 }
@@ -74,11 +75,12 @@ function reddit(event) {
 
   for (i = 0; i < to_join.length; i++) {
     if (to_join[i].includes('reddit.com')) { 
-      break; 
+      if (!to_join[i].includes('http')) { 
+        to_join[i] = 'https://' + to_join[i]; 
+      }
+      break;
     }
   }
-
-  if (to_join[i][0] != 'h') { to_join[i] = 'https://' + to_join[i]; }
 
   const query = to_join[i] + '.json'
   axios.get(query)
