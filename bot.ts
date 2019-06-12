@@ -85,7 +85,7 @@ function reddit(event) {
   const query = to_join[i] + '.json'
   axios.get(query)
   .then(function (response) {
-    const { title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    const { subreddit_name_prefixed, title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
     let parsedTitle = he.decode(title);
     let ratio = upvote_ratio * 100;
     
@@ -94,7 +94,7 @@ function reddit(event) {
     else {ratio = c.red(ratio + "%")};
 
     event.reply(
-      c.bold('reddit') + 
+      c.bold(subreddit_name_prefixed) + 
       " | " + parsedTitle +
       " | Comments: " + num_comments +
       " | Ratio: " + ratio
