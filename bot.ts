@@ -7,19 +7,23 @@ require('colors');
 
 const bot = new IRC.Client();
 
+let {IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME} = process.env;
+
 bot.connect({
-  host: 'irc.synirc.net',
-  port: 6667,
-  nick: 'adarbot',
-  username: 'adar'
+  host: IRC_HOST,
+  port: IRC_PORT,
+  nick: IRC_NICK,
+  username: IRC_USERNAME
 });
 
 bot.on('close', function() { console.log('Connection closed.'); });
 
 bot.on('registered', function(event) {
-  bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
-  bot.join('#adarbot');
-  bot.join("#cobol");
+  console.log('Connected to server.')
+  //bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
+  const channel = '#' + process.env.IRC_CHANNEL
+  bot.join(channel);
+  console.log(`Joined ${channel}.`)
 });
 
 bot.on('message', function(event) {
@@ -86,15 +90,17 @@ function reddit(event) {
   axios.get(query)
   .then(function (response) {
     const { subreddit_name_prefixed, title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    
     let parsedTitle = he.decode(title);
     let ratio = upvote_ratio * 100;
+    let subreddit = c.bold(subreddit_name_prefixed);
     
     if (ratio >=80) { ratio = c.green(ratio + "%"); }
     else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
     else {ratio = c.red(ratio + "%")};
 
     event.reply(
-      c.bold(subreddit_name_prefixed) + 
+      subreddit + 
       " | " + parsedTitle +
       " | Comments: " + num_comments +
       " | Ratio: " + ratio
