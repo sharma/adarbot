@@ -7,7 +7,7 @@ require('colors');
 
 const bot = new IRC.Client();
 
-let {IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME} = process.env;
+let {IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS} = process.env;
 
 bot.connect({
   host: IRC_HOST,
@@ -16,18 +16,18 @@ bot.connect({
   username: IRC_USERNAME
 });
 
-bot.on('close', function() { console.log('Connection closed.'); });
+bot.on('close', () => { console.log('Connection closed.'); });
 
-bot.on('registered', function(event) {
-  console.log('Connected to server.')
-  //bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
-  const channel = '#' + process.env.IRC_CHANNEL
+bot.on('registered', () => {
+  console.log(`Connected to ${IRC_HOST}.`)
+  bot.say('nickserv', 'identify ' + NICKSERV_PASS);
+  const channel = '#' + IRC_CHANNEL
   bot.join(channel);
   console.log(`Joined ${channel}.`)
 });
 
-bot.on('message', function(event) {
-  console.log("<" + event.nick.bold.green + "> " + event.message)
+bot.on('message', (event) => {
+  console.log(`<${event.nick.bold.green}> ${event.message}`)
   
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
