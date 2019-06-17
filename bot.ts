@@ -21,13 +21,13 @@ bot.on('close', () => { console.log('Connection closed.'); });
 bot.on('registered', () => {
   console.log(`Connected to ${IRC_HOST}.`)
   bot.say('nickserv', 'identify ' + NICKSERV_PASS);
-  const channel = '#' + IRC_CHANNEL
+  const channel = '#' + IRC_CHANNEL;
   bot.join(channel);
   console.log(`Joined ${channel}.`)
 });
 
 bot.on('message', (event) => {
-  console.log(`<${event.nick.bold.green}> ${event.message}`)
+  console.log(`<${event.nick.bold.green}> ${event.message}`);
   
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
