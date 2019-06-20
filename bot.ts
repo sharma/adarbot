@@ -21,9 +21,8 @@ bot.on('close', () => { console.log('Connection closed.'); });
 bot.on('registered', () => {
   console.log(`Connected to ${IRC_HOST}.`)
   bot.say('nickserv', 'identify ' + NICKSERV_PASS);
-  const channel = '#' + IRC_CHANNEL;
-  bot.join(channel);
-  console.log(`Joined ${channel}.`)
+  bot.join(IRC_CHANNEL);
+  console.log(`Joined ${IRC_CHANNEL}.`)
 });
 
 bot.on('message', (event) => {
@@ -35,6 +34,10 @@ bot.on('message', (event) => {
   if (event.message.match(/reddit.com/)) {
     reddit(event);
   }
+  if (event.message.match(/capitalism/) && event.nick ==='charismama') {
+    event.reply('shut da fuck up charismama');
+  }
+
 });
 
 function stocks(event) {
