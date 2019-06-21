@@ -34,10 +34,9 @@ bot.on('message', (event) => {
   if (event.message.match(/reddit.com/)) {
     reddit(event);
   }
-  if (event.message.match(/capitalism/) && event.nick ==='charismama') {
-    event.reply('shut da fuck up charismama');
+  if (event.message.match(/capitalism/) && event.nick.includes('charisma')) {
+    event.reply('shut up charismama');
   }
-
 });
 
 function stocks(event) {
