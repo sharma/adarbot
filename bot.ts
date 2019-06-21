@@ -7,29 +7,35 @@ require('colors');
 
 const bot = new IRC.Client();
 
+let {IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS} = process.env;
+
 bot.connect({
-  host: 'irc.synirc.net',
-  port: 6667,
-  nick: 'adarbot',
-  username: 'adar'
+  host: IRC_HOST,
+  port: IRC_PORT,
+  nick: IRC_NICK,
+  username: IRC_USERNAME
 });
 
-bot.on('close', function() { console.log('Connection closed.'); });
+bot.on('close', () => { console.log('Connection closed.'); });
 
-bot.on('registered', function(event) {
-  bot.say('nickserv', 'identify ' + process.env.NICKSERV_PASS);
-  bot.join('#adarbot');
-  bot.join("#cobol");
+bot.on('registered', () => {
+  console.log(`Connected to ${IRC_HOST}.`)
+  bot.say('nickserv', 'identify ' + NICKSERV_PASS);
+  bot.join(IRC_CHANNEL);
+  console.log(`Joined ${IRC_CHANNEL}.`)
 });
 
-bot.on('message', function(event) {
-  console.log("<" + event.nick.bold.green + "> " + event.message)
+bot.on('message', (event) => {
+  console.log(`<${event.nick.bold.green}> ${event.message}`);
   
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
   }
   if (event.message.match(/reddit.com/)) {
     reddit(event);
+  }
+  if (event.message.match(/capitalism/) && event.nick.includes('charisma')) {
+    event.reply('shut up charismama');
   }
 });
 
@@ -85,16 +91,18 @@ function reddit(event) {
   const query = to_join[i] + '.json'
   axios.get(query)
   .then(function (response) {
-    const { title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    const { subreddit_name_prefixed, title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    
     let parsedTitle = he.decode(title);
     let ratio = upvote_ratio * 100;
+    let subreddit = c.bold(subreddit_name_prefixed);
     
     if (ratio >=80) { ratio = c.green(ratio + "%"); }
     else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
     else {ratio = c.red(ratio + "%")};
 
     event.reply(
-      c.bold('reddit') + 
+      subreddit + 
       " | " + parsedTitle +
       " | Comments: " + num_comments +
       " | Ratio: " + ratio
