@@ -34,7 +34,7 @@ bot.on('message', (event) => {
   if (event.message.match(/reddit.com/)) {
     reddit(event);
   }
-  if (event.message.match(/capitalism/) && event.nick.includes('charisma')) {
+  if (event.message.match(/capitalism/) && event.nick.match(/charisma/)) {
     event.reply('shut up charismama');
   }
 });
