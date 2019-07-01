@@ -7,7 +7,7 @@ require('colors');
 
 const bot = new IRC.Client();
 
-let {IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS} = process.env;
+let { IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS } = process.env;
 
 bot.connect({
   host: IRC_HOST,
@@ -47,8 +47,8 @@ function stocks(event) {
       token: process.env.IEX_API_KEY
     }
   })
-  .then(function(response) {
-    let {change, changePercent, companyName, symbol, latestPrice, marketCap} = response.data;
+  .then(response => {
+    let { change, changePercent, companyName, symbol, latestPrice, marketCap } = response.data;
     change = parseFloat(response.data.change.toFixed(2));
     changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
@@ -70,7 +70,7 @@ function stocks(event) {
       " | MCAP: $" + formattedMCAP(marketCap)
     );
   })
-  .catch(function(error) {
+  .catch(error => {
     console.log(error);
   });
 }
@@ -90,7 +90,7 @@ function reddit(event) {
 
   const query = to_join[i] + '.json'
   axios.get(query)
-  .then(function (response) {
+  .then(response => {
     const { subreddit_name_prefixed, title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
     
     let parsedTitle = he.decode(title);
@@ -109,7 +109,7 @@ function reddit(event) {
     );
   })
 
-  .catch(function (error) {
+  .catch(error => {
     console.log(error);
   });
 }
