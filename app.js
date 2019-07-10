@@ -7,7 +7,7 @@ require('colors');
 
 const bot = new IRC.Client();
 let { IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS } = process.env;
-let ignoredNicks = [skybot, buttebot];
+let ignoredNicks = ["skybot", "buttebot"];
 
 bot.connect({
   host: IRC_HOST,
