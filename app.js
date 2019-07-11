@@ -6,8 +6,8 @@ require('dotenv').config();
 require('colors');
 
 const bot = new IRC.Client();
-
 let { IRC_HOST, IRC_PORT, IRC_NICK, IRC_USERNAME, IRC_CHANNEL, NICKSERV_PASS } = process.env;
+let ignoredNicks = ["skybot", "buttebot"];
 
 bot.connect({
   host: IRC_HOST,
@@ -28,15 +28,21 @@ bot.on('registered', () => {
 bot.on('message', (event) => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
   
+  if (ignoredNicks.includes(event.nick)) {
+    return;
+  }
+
+  if (event.message.match(/capitalism/) && event.nick.match(/charisma/)) {
+    event.reply('shut up charismama');
+  }
+
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
   }
   if (event.message.match(/reddit.com/)) {
     reddit(event);
   }
-  if (event.message.match(/capitalism/) && event.nick.match(/charisma/)) {
-    event.reply('shut up charismama');
-  }
+
 });
 
 function stocks(event) {
