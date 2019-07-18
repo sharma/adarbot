@@ -124,10 +124,10 @@ function reddit(event) {
         num_comments,
         upvote_ratio
       } = response.data[0].data.children[0].data;
+
       const { id, body } = response.data[1].data.children[0].data;
-      let commentIDFromURL = to_join[i];
-      commentIDFromURL = commentIDFromURL.replace(/\/$/, "");
-      commentIDFromURL = commentIDFromURL.slice(-7);
+
+      const commentIDFromURL = to_join[i].replace(/\/$/, "").slice(-7);
       let parsedTitle = he.decode(title);
       let ratio = upvote_ratio * 100;
       let subreddit = c.bold(subreddit_name_prefixed);
