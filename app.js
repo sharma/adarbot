@@ -139,9 +139,14 @@ function reddit(event) {
       } else {
         ratio = c.red(ratio + "%");
       }
-      
+
       if (commentIDFromURL === id) {
-        event.reply('"' + body.replace("\n\n", "").substring(0, 340) + '..."');
+        let comment = '"' + body.replace("\n\n", "").substring(0, 340);
+        if (body.length > 340) {
+          comment = comment + "...";
+        }
+        comment = comment + '"';
+        event.reply(comment);
       } else {
         event.reply(
           subreddit +
