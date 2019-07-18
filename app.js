@@ -91,18 +91,14 @@ function reddit(event) {
     }
   }
 
-
-
-  
-
   const query = to_join[i] + '.json'
   axios.get(query)
   .then(response => {
     const { subreddit_name_prefixed, title, num_comments, upvote_ratio } = response.data[0].data.children[0].data;
+    const {id, body} = response.data[1].data.children[0].data;
     let commentIDFromURL = to_join[i];
-    commentIDFromURL = commentIDFromURL.replace('/','');
-    commentIDFromURL = commentIDFromURL.slice(-7)
-    const commentID = response.data[1].data.children[0].data.id;
+    commentIDFromURL = commentIDFromURL.replace(/\/$/, '');
+    commentIDFromURL = commentIDFromURL.slice(-7);
     let parsedTitle = he.decode(title);
     let ratio = upvote_ratio * 100;
     let subreddit = c.bold(subreddit_name_prefixed);
@@ -110,9 +106,8 @@ function reddit(event) {
     if (ratio >=80) { ratio = c.green(ratio + "%"); }
     else if (ratio >= 60) { ratio = c.yellow(ratio + "%"); }
     else {ratio = c.red(ratio + "%")};
-
-    if (commentIDFromURL === commentID) {
-      event.reply('"' + response.data[1].data.children[0].data.body.substring(0,210) + '..."')
+    if (commentIDFromURL === id) {
+      event.reply('"' + body.replace('\n\n','').substring(0,340) + '..."')
     }
     else {
       event.reply(
