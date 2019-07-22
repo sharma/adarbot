@@ -126,8 +126,10 @@ function reddit(event) {
       } = response.data[0].data.children[0].data;
 
       const { id, body } = response.data[1].data.children[0].data;
-
-      const commentIDFromURL = to_join[i].replace(/\/$/, "").slice(-7);
+      const commentIDSize = 7;
+      const commentIDFromURL = to_join[i]
+        .replace(/\/$/, "")
+        .slice(-commentIDSize);
       let parsedTitle = he.decode(title);
       let ratio = upvote_ratio * 100;
       let subreddit = c.bold(subreddit_name_prefixed);
@@ -141,7 +143,8 @@ function reddit(event) {
       }
 
       if (commentIDFromURL === id) {
-        let comment = '"' + body.replace("\n\n", "").substring(0, 340);
+        const commentBody = body.replace("\n\n", "").substring(0, 340);
+        let comment = '"' + commentBody;
         if (body.length > 340) {
           comment = comment + "...";
         }
