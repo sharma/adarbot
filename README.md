@@ -1,5 +1,5 @@
 # adarbot
-An internet relay chat (IRC) bot written in Node.
+An internet relay chat (IRC) bot written with JavaScript/Node.
 
 Plugins:
 - Stock data (ex. `,st AMD` returns market data for Advanced Micro Devices.
