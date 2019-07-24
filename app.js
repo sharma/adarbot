@@ -143,7 +143,7 @@ function reddit(event) {
       }
 
       if (commentIDFromURL === id) {
-        const commentBody = body.replace("\n\n", "").substring(0, 340);
+        const commentBody = he.decode(body.replace("\n\n", "").substring(0, 340));
         let comment = '"' + commentBody;
         if (body.length > 340) {
           comment = comment + "...";
