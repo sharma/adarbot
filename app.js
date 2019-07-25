@@ -175,6 +175,8 @@ function reddit(event) {
         for (let i = 0; i < censoredStrings.length; i++) {
           if (parsedTitle.includes(censoredStrings[i])) {
             return;
+          }
+        }
         event.reply(
           subreddit +
             " | " +
