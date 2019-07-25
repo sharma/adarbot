@@ -15,6 +15,17 @@ let {
   NICKSERV_PASS
 } = process.env;
 let ignoredNicks = ["skybot", "buttebot"];
+let censoredStrings = [
+  "DCC SEND",
+  "1nj3ct",
+  "thewrestlinggame",
+  "startkeylogger",
+  "hybux",
+  "\\0",
+  "\\x01",
+  "!coz",
+  "!tell /x"
+]
 
 bot.connect({
   host: IRC_HOST,
@@ -71,6 +82,9 @@ function stocks(event) {
         marketCap
       } = response.data;
       change = parseFloat(response.data.change.toFixed(2));
+      if (change > 0) {
+        change = '+' + change;
+      }
       changePercent =
         "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
@@ -151,8 +165,16 @@ function reddit(event) {
           comment = comment + "...";
         }
         comment = comment + '"';
+        for (let i = 0; i < censoredStrings.length; i++) {
+          if (comment.includes(censoredStrings[i])) {
+            return;
+          }
+        }
         event.reply(comment);
       } else {
+        for (let i = 0; i < censoredStrings.length; i++) {
+          if (parsedTitle.includes(censoredStrings[i])) {
+            return;
         event.reply(
           subreddit +
             " | " +
