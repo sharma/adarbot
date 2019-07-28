@@ -82,9 +82,6 @@ function stocks(event) {
         marketCap
       } = response.data;
       change = parseFloat(response.data.change.toFixed(2));
-      if (change > 0) {
-        change = '+' + change;
-      }
       changePercent =
         "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
@@ -92,6 +89,7 @@ function stocks(event) {
         change = c.red(change);
         changePercent = c.red(changePercent);
       } else if (change > 0) {
+        change = '+' + change;
         change = c.green(change);
         changePercent = c.green(changePercent);
       }
