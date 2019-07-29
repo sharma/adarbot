@@ -25,7 +25,7 @@ let censoredStrings = [
   "\\x01",
   "!coz",
   "!tell /x"
-]
+];
 
 bot.connect({
   host: IRC_HOST,
@@ -89,7 +89,7 @@ function stocks(event) {
         change = c.red(change);
         changePercent = c.red(changePercent);
       } else if (change > 0) {
-        change = '+' + change;
+        change = "+" + change;
         change = c.green(change);
         changePercent = c.green(changePercent);
       }
@@ -132,9 +132,7 @@ function reddit(event) {
     .then(response => {
       const {
         subreddit_name_prefixed,
-        title,
-        num_comments,
-        upvote_ratio
+        title
       } = response.data[0].data.children[0].data;
 
       const { id, body } = response.data[1].data.children[0].data;
@@ -143,23 +141,15 @@ function reddit(event) {
         .replace(/\/$/, "")
         .slice(-commentIDSize);
       let parsedTitle = he.decode(title);
-      let ratio = upvote_ratio * 100;
       let subreddit = c.bold(subreddit_name_prefixed);
-
-      if (ratio >= 80) {
-        ratio = c.green(ratio + "%");
-      } else if (ratio >= 60) {
-        ratio = c.yellow(ratio + "%");
-      } else {
-        ratio = c.red(ratio + "%");
-      }
-
+      console.log(subreddit_name_prefixed.length);
       if (commentIDFromURL === id) {
+        const commentLength = 330 - subreddit_name_prefixed.length;
         const commentBody = he.decode(
-          body.replace(/\r?\n|\r/g, " ").substring(0, 340)
+          body.replace(/\r?\n|\r/g, " ").substring(0, commentLength)
         );
         let comment = '"' + commentBody;
-        if (body.length > 340) {
+        if (body.length > commentLength) {
           comment = comment + "...";
         }
         comment = comment + '"';
@@ -168,22 +158,14 @@ function reddit(event) {
             return;
           }
         }
-        event.reply(comment);
+        event.reply(subreddit + " | " + comment);
       } else {
         for (let i = 0; i < censoredStrings.length; i++) {
           if (parsedTitle.includes(censoredStrings[i])) {
             return;
           }
         }
-        event.reply(
-          subreddit +
-            " | " +
-            parsedTitle +
-            " | Comments: " +
-            num_comments +
-            " | Ratio: " +
-            ratio
-        );
+        event.reply(subreddit + " | " + parsedTitle);
       }
     })
 
