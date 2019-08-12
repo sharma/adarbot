@@ -51,9 +51,6 @@ bot.on("message", event => {
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
-  if (event.message.match(/capitalism/) && event.nick.match(/charisma/)) {
-    event.reply("shut up charismama");
-  }
   if (event.message.match(/^\,st(ock)?/)) {
     stocks(event);
   }
