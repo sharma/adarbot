@@ -6,7 +6,7 @@ An internet relay chat (IRC) bot written with JavaScript/Node.
 - Reddit link parsing (can differentiate between posts and comments; for posts the bot returns title of thread, and if a comment is linked it returns the body of the comment.)
 
 ### Usage:
-- Make sure you have Node/NPM installed; you can either use `nvm` or install via an alternate method at [nodejs.org](https://nodejs.org).
+- Make sure you have node/npm installed; you can either use `nvm` or install via an alternate method at [nodejs.org](https://nodejs.org).
 - Clone the repo to your deploy location via `git clone https://github.com/sharma/adarbot.git`.
 - Run `npm install` in the cloned repo folder to install necessary dependencies from NPM.
 - Rename `.env.example` to `.env` and fill in the needed values. An IEX API key for the stock market functionality can be acquired from IEX Cloud.
