@@ -1,3 +1,4 @@
+const fs = require('fs');
 const IRC = require("irc-framework");
 const axios = require("axios");
 const c = require("irc-colors");
@@ -5,6 +6,16 @@ const he = require("he");
 require("dotenv").config();
 require("colors");
 
+// Make sure an .env file exists to pull config data from
+const path = './.env';
+
+fs.access(path, fs.F_OK, (err) => {
+  if (err) {
+    console.error("No .env file found. Rename and edit .env.example with your settings.");
+  }
+});
+
+// Instantiate bot with config data from .env
 const bot = new IRC.Client();
 let {
   IRC_HOST,
@@ -14,7 +25,11 @@ let {
   IRC_CHANNEL,
   NICKSERV_PASS
 } = process.env;
+
+// Ignore messages from other bots in the channel
 let ignoredNicks = ["skybot", "buttebot"];
+
+// Filter any lines from IRC with k-line words in them so the bot doesn't get banned
 let censoredStrings = [
   "DCC SEND",
   "1nj3ct",
@@ -27,6 +42,7 @@ let censoredStrings = [
   "!tell /x"
 ];
 
+// Connect the bot to IRC server
 bot.connect({
   host: IRC_HOST,
   port: IRC_PORT,
@@ -34,6 +50,7 @@ bot.connect({
   username: IRC_USERNAME
 });
 
+// When the bot is shut down
 bot.on("close", () => {
   console.log("Connection closed.");
 });
@@ -45,13 +62,14 @@ bot.on("registered", () => {
   console.log(`Joined ${IRC_CHANNEL}.`);
 });
 
+// Basic message parsing to determine if a plugin should be activated
 bot.on("message", event => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
 
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
-  if (event.message.match(/^\,st(ock)?/)) {
+  if (event.message.match(/^,st(ock)?/)) {
     stocks(event);
   }
   if (event.message.match(/reddit.com/)) {
@@ -59,6 +77,8 @@ bot.on("message", event => {
   }
 });
 
+// Stock plugin
+// TODO: Move it into its own file
 function stocks(event) {
   const to_join = event.message.split(" ");
   const query =
@@ -71,16 +91,14 @@ function stocks(event) {
     })
     .then(response => {
       let {
-        change,
-        changePercent,
         companyName,
         symbol,
         latestPrice,
         marketCap
       } = response.data;
-      change = parseFloat(response.data.change.toFixed(2));
-      changePercent =
-        "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+
+      let change = parseFloat(response.data.change.toFixed(2));
+      let changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
 
       if (change < 0) {
         change = c.red(change);
@@ -110,6 +128,8 @@ function stocks(event) {
     });
 }
 
+// Reddit parsing plugin
+// TODO: Move it into its own file
 function reddit(event) {
   const to_join = event.message.split(" ");
   let i;
@@ -171,6 +191,7 @@ function reddit(event) {
     });
 }
 
+// Helper function for stock plugin to attach (K, M, B, T) to the market cap
 function formattedMCAP(num) {
   if (num === null) {
     return null;
@@ -183,7 +204,7 @@ function formattedMCAP(num) {
     k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3),
     c =
       k < 1
-        ? num.toFixed(0 + fixed)
+        ? num.toFixed(fixed)
         : (num / Math.pow(10, k * 3)).toFixed(1 + fixed),
     d = c < 0 ? c : Math.abs(c),
     e = d + ["", "K", "M", "B", "T"][k];
