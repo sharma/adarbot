@@ -143,7 +143,7 @@ function reddit(event) {
     }
   }
 
-  const query = to_join[i] + ".json";
+  const query = to_join[i].split('?')[0] + ".json";
   axios
     .get(query)
     .then(response => {
@@ -157,18 +157,22 @@ function reddit(event) {
       const commentIDFromURL = to_join[i]
         .replace(/\/$/, "")
         .slice(-commentIDSize);
+
       let parsedTitle = he.decode(title);
       let subreddit = c.bold(subreddit_name_prefixed);
-      console.log(subreddit_name_prefixed.length);
+
       if (commentIDFromURL === id) {
         const commentLength = 330 - subreddit_name_prefixed.length;
         const commentBody = he.decode(
           body.replace(/\r?\n|\r/g, " ").substring(0, commentLength)
         );
+
         let comment = '"' + commentBody;
+
         if (body.length > commentLength) {
           comment = comment + "...";
         }
+
         comment = comment + '"';
         for (let i = 0; i < censoredStrings.length; i++) {
           if (comment.includes(censoredStrings[i])) {
