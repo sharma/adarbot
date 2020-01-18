@@ -62,10 +62,10 @@ bot.on("registered", () => {
   console.log(`Joined ${IRC_CHANNEL}.`);
 });
 
-// Basic message parsing to determine if a plugin should be activated
 bot.on("message", event => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
 
+  // Basic message parsing to determine if a plugin should be activated
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
@@ -79,11 +79,11 @@ bot.on("message", event => {
 
 // Stock plugin
 // TODO: Move it into its own file
-function stocks(event) {
+async function stocks(event) {
   const to_join = event.message.split(" ");
   const query =
     "https://cloud.iexapis.com/stable/stock/" + to_join[1] + "/quote";
-  axios
+  await axios
     .get(query, {
       params: {
         token: process.env.IEX_API_KEY
@@ -130,7 +130,7 @@ function stocks(event) {
 
 // Reddit parsing plugin
 // TODO: Move it into its own file
-function reddit(event) {
+async function reddit(event) {
   const to_join = event.message.split(" ");
   let i;
 
@@ -144,7 +144,7 @@ function reddit(event) {
   }
 
   const query = to_join[i].split('?')[0] + ".json";
-  axios
+  await axios
     .get(query)
     .then(response => {
       const {
@@ -163,9 +163,7 @@ function reddit(event) {
 
       if (commentIDFromURL === id) {
         const commentLength = 330 - subreddit_name_prefixed.length;
-        const commentBody = he.decode(
-          body.replace(/\r?\n|\r/g, " ").substring(0, commentLength)
-        );
+        const commentBody = he.decode(body.replace(/\r?\n|\r/g, " ").substring(0, commentLength));
 
         let comment = '"' + commentBody;
 
