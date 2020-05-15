@@ -12,7 +12,9 @@
     "irc-colors": "^1.5.0",
     "irc-framework": "^4.6.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "request": "^2.88.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

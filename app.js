@@ -69,11 +69,14 @@ bot.on("message", event => {
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
-  if (event.message.match(/^,st(ock)?/)) {
+  if (event.message.match(/^,st(ock)?/) || event.message.match(/^!st(ock)?/)) {
     stocks(event);
   }
   if (event.message.match(/reddit.com/)) {
     reddit(event);
+  }
+  if (event.message.match(/^!gp/)) {
+    gameprices(event);
   }
 });
 
@@ -124,7 +127,7 @@ async function stocks(event) {
       );
     })
     .catch(error => {
-      console.log(error);
+      event.reply('Error finding stock.');
     });
 }
 
@@ -211,4 +214,25 @@ function formattedMCAP(num) {
     d = c < 0 ? c : Math.abs(c),
     e = d + ["", "K", "M", "B", "T"][k];
   return e;
+}
+
+async function gameprices (event) {
+
+  const game = event.message.replace("!gp ", "");
+  let ITAD_API_KEY = process.env.ITAD_API_KEY;
+  console.log(game);
+  const query = "https://api.isthereanydeal.com/v01/search/search/?key=" + ITAD_API_KEY + "&q=" + game + "&region=us&limit=60&country=us";
+  //console.log(query);
+  await axios
+      .get(query)
+      .then(response => {
+        let price = response.data.data.list[0].price_new;
+        let gameName = response.data.data.list[0].title;
+        let shopName = response.data.data.list[0].shop.name;
+        let DRM = response.data.data.list[0].drm;
+        event.reply(gameName + " - $" + price + " @ " + shopName);
+      })
+      .catch(error => {
+        event.reply('Error finding game.');
+      });
 }
