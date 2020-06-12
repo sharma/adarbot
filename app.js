@@ -69,13 +69,20 @@ bot.on("message", event => {
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
-  if (event.message.match(/^,st(ock)?/) || event.message.match(/^!st(ock)?/)) {
+
+  // Stock plugin trigger
+  if (event.message.substring(0,6).match(/^,st(ock)?/) ||
+      event.message.substring(0,6).match(/^!st(ock)?/)) {
     stocks.search(event);
   }
+
+  // Reddit plugin trigger
   if (event.message.match(/reddit.com/)) {
     reddit.parse(event, censoredStrings);
   }
-  if (event.message.match(/^!gp/)) {
+
+  // Game prices plugin trigger
+  if (event.message.substring(0,3) === "!gp") {
     gameprices.search(event);
   }
 });
