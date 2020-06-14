@@ -55,6 +55,7 @@ bot.on("close", () => {
   console.log("Connection closed.");
 });
 
+// Identify with nickserv and join channel
 bot.on("registered", () => {
   console.log(`Connected to ${IRC_HOST}.`);
   bot.say("nickserv", "identify " + NICKSERV_PASS);
@@ -65,7 +66,6 @@ bot.on("registered", () => {
 bot.on("message", event => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
 
-  // Basic message parsing to determine if a plugin should be activated
   if (ignoredNicks.includes(event.nick)) {
     return;
   }
