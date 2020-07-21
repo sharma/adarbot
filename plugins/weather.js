@@ -12,10 +12,11 @@ module.exports.search = async function lookup(event) {
     splitMessage = splitMessage.replace("!we ", "").replace(" dontsave", "");
 
     const geoQuery = `https://api.opencagedata.com/geocode/v1/json?key=${OCD_API_KEY}&q=${splitMessage}&pretty=1`;
-
-    let lat = ""
-    let lng = ""
-    let formattedLocation = "";
+    let {
+        lat,
+        lng,
+        formattedLocation
+    } = "";
 
     await axios
         .get(geoQuery)
@@ -27,7 +28,7 @@ module.exports.search = async function lookup(event) {
         })
         .catch(error => {
             console.log(error);
-            event.reply(event.nick + ": Could not find weather for location.");
+            event.reply(event.nick + ": Could not find location.");
         });
 
     const query = `https://api.climacell.co/v3/weather/realtime?lat=${lat}&lon=${lng}&fields=temp%2Chumidity%2Cwind_speed%2Cprecipitation_type%2Cepa_health_concern&apikey=${CLIMACELL_API_KEY}`;
@@ -42,10 +43,12 @@ module.exports.search = async function lookup(event) {
             const wind_speedM = ((wind_speedKM) / 1.6).toPrecision(2);
             const air_quality = response.data.epa_health_concern.value;
             const precipitation = response.data.precipitation_type.value;
+
             event.reply(`${event.nick}: ${formattedLocation} | ${tempF}F/${tempC}C | Precipitation: ${precipitation} | Humidity: ${humidity}% | Wind Speed: ${wind_speedM}mph/${wind_speedKM}kmph | Air Quality: ${air_quality}`);
         })
         .catch(error => {
             console.log(error);
+            event.reply(event.nick + ": No weather found for location.");
         })
 }
 

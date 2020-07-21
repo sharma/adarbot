@@ -2,7 +2,7 @@
 An internet relay chat (IRC) bot written with JavaScript/Node.
 
 ### Plugins:
-- Weather data for a given location (Temperature, humidity, wind speed) `!we [location]`
+- Weather data for a given location (Temperature, precipitation, humidity, wind speed, air quality) `!we [location]`
 - Stock data (ex. `!st AMD` returns market data for Advanced Micro Devices.)
 - Reddit link parsing (can differentiate between posts and comments; for posts the bot returns title of thread, and if a comment is linked it returns the body of the comment.)
 - PC game pricing returns the lowest price for a PC game via IsThereAnyDeal.com, which searches several online stores for prices. `!gp [game name]`

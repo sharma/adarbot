@@ -9,7 +9,6 @@ const weather = require('./plugins/weather.js');
 
 // Make sure an .env file exists to pull config data from
 const path = './.env';
-
 fs.access(path, fs.F_OK, (err) => {
   if (err) {
     console.error("No .env file found. Rename and edit .env.example with your settings.");
@@ -83,12 +82,12 @@ bot.on("message", event => {
   }
 
   // Game prices plugin trigger
-  if (event.message.substring(0,3) === "!gp") {
+  if (event.message.substring(0,3) === ",gp") {
     gameprices.search(event);
   }
 
   // Weather plugin trigger
-  if (event.message.substring(0,3) === "!we") {
+  if (event.message.substring(0,3) === ",we") {
     weather.search(event);
   }
 });
