@@ -47,7 +47,7 @@ module.exports.search = async function stocks(event) {
         })
         .catch(error => {
             console.log(error);
-            event.reply('Error finding stock.');
+            event.reply("Error finding stock.");
         });
 }
 

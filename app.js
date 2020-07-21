@@ -5,6 +5,7 @@ require("colors");
 const gameprices = require('./plugins/gameprices.js');
 const stocks = require('./plugins/stocks.js');
 const reddit = require('./plugins/reddit.js');
+const weather = require('./plugins/weather.js');
 
 // Make sure an .env file exists to pull config data from
 const path = './.env';
@@ -84,5 +85,10 @@ bot.on("message", event => {
   // Game prices plugin trigger
   if (event.message.substring(0,3) === "!gp") {
     gameprices.search(event);
+  }
+
+  // Weather plugin trigger
+  if (event.message.substring(0,3) === "!we") {
+    weather.search(event);
   }
 });

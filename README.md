@@ -2,9 +2,10 @@
 An internet relay chat (IRC) bot written with JavaScript/Node.
 
 ### Plugins:
+- Weather data for a given location (Temperature, humidity, wind speed) `!we [location]`
 - Stock data (ex. `!st AMD` returns market data for Advanced Micro Devices.)
 - Reddit link parsing (can differentiate between posts and comments; for posts the bot returns title of thread, and if a comment is linked it returns the body of the comment.)
-- Returns the lowest price for a PC game via IsThereAnyDeal.com, which searches several online stores for prices. `(!gp [game name])`
+- PC game pricing returns the lowest price for a PC game via IsThereAnyDeal.com, which searches several online stores for prices. `!gp [game name]`
 ### Usage:
 - Make sure you have node/npm installed; you can either use `nvm` or install via an alternate method at [nodejs.org](https://nodejs.org).
 - Clone the repo to your deploy location via `git clone https://github.com/sharma/adarbot.git`.

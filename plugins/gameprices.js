@@ -1,9 +1,9 @@
 const axios = require("axios");
 
-module.exports.search = async function gameprices (event) {
+module.exports.search = async function gameprices(event) {
 
     const game = event.message.replace("!gp ", "");
-    let ITAD_API_KEY = process.env.ITAD_API_KEY;
+    const ITAD_API_KEY = process.env.ITAD_API_KEY;
     const query = "https://api.isthereanydeal.com/v01/search/search/?key=" + ITAD_API_KEY + "&q=" + game + "&region=us&limit=60&country=us";
     await axios
         .get(query)
@@ -16,6 +16,6 @@ module.exports.search = async function gameprices (event) {
         })
         .catch(error => {
             console.log(error);
-            event.reply(event.nick + ': Error finding game.');
+            event.reply(event.nick + ": Error finding game.");
         });
 }
