@@ -29,6 +29,7 @@ module.exports.search = async function lookup(event) {
         .catch(error => {
             console.log(error);
             event.reply(event.nick + ": Could not find location.");
+            return;
         });
 
     const query = `https://api.climacell.co/v3/weather/realtime?lat=${lat}&lon=${lng}&fields=temp%2Chumidity%2Cwind_speed%2Cprecipitation_type%2Cepa_health_concern&apikey=${CLIMACELL_API_KEY}`;
