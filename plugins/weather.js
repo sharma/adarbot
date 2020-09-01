@@ -38,10 +38,10 @@ module.exports.search = async function lookup(event) {
         .get(query)
         .then(response => {
             const tempC = parseInt(response.data.temp.value).toPrecision(3);
-            const tempF = ((tempC) * (9/5) + 32).toPrecision(3);
-            const humidity = response.data.humidity.value.toPrecision(2);
-            const wind_speedKM = parseInt(response.data.wind_speed.value).toPrecision(2);
-            const wind_speedM = ((wind_speedKM) / 1.6).toPrecision(2);
+            const tempF = ((tempC) * (9/5) + 32).toFixed(1);
+            const humidity = response.data.humidity.value.toFixed(1);
+            const wind_speedKM = parseInt(response.data.wind_speed.value).toFixed(0);
+            const wind_speedM = ((wind_speedKM) / 1.6).toFixed(0);
             const air_quality = response.data.epa_health_concern.value;
             const precipitation = response.data.precipitation_type.value;
 

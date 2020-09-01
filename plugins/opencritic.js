@@ -1,4 +1,5 @@
 const axios = require("axios");
+const c = require("irc-colors");
 
 module.exports.search = async function search(event) {
 
@@ -21,7 +22,10 @@ module.exports.search = async function search(event) {
   await axios
     .get(gameReviewQuery)
     .then(response => {
-
+      let {name, numReviews, averageScore, tier} = response.data;
+      returnResults = c.bold(name) + " | Avg. Score: " + c.bold(averageScore.toFixed(1)) + " | Reviews: " + c.bold(numReviews) + " | OpenCritic Consensus: " + c.bold(tier);
+      console.log(returnResults);
+      event.reply(returnResults);
     })
 
 }
