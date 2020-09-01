@@ -9,7 +9,7 @@ module.exports.search = async function lookup(event) {
         dontsave = 1;
     }
     let splitMessage = event.message;
-    splitMessage = splitMessage.replace("!we ", "").replace(" dontsave", "");
+    splitMessage = splitMessage.replace(",we ", "").replace(" dontsave", "");
 
     const geoQuery = `https://api.opencagedata.com/geocode/v1/json?key=${OCD_API_KEY}&q=${splitMessage}&pretty=1`;
     let {
