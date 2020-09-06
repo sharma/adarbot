@@ -23,9 +23,16 @@ module.exports.search = async function search(event) {
     .get(gameReviewQuery)
     .then(response => {
       let {name, numReviews, averageScore, tier} = response.data;
-      returnResults = c.bold(name) + " | Avg. Score: " + c.bold(averageScore.toFixed(1)) + " | Reviews: " + c.bold(numReviews) + " | OpenCritic Consensus: " + c.bold(tier);
+      returnResults =
+        c.bold(name) +
+        " | Avg. Score: " +
+        c.bold(averageScore.toFixed(0)) +
+        " | Reviews: " +
+        c.bold(numReviews) +
+        " | Rating: " +
+        c.bold(tier) +
+        ` | https://opencritic.com/game/${gameID}/x`;
       console.log(returnResults);
       event.reply(returnResults);
     })
-
 }
