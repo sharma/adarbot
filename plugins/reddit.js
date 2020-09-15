@@ -24,7 +24,7 @@ module.exports.parse = async function reddit(event, censoredStrings) {
                 title
             } = response.data[0].data.children[0].data;
 
-            const { id, body } = response.data[1].data.children[0].data;
+            const { id, body, author } = response.data[1].data.children[0].data;
             const commentIDSize = 7;
             const commentIDFromURL = to_join[i]
                 .replace(/\/$/, "")
@@ -34,7 +34,7 @@ module.exports.parse = async function reddit(event, censoredStrings) {
             let subreddit = c.bold(subreddit_name_prefixed);
 
             if (commentIDFromURL === id) {
-                const commentLength = 330 - subreddit_name_prefixed.length;
+                const commentLength = 330 - (author.length + subreddit_name_prefixed.length + 1);
                 const commentBody = he.decode(body.replace(/\r?\n|\r/g, " ").substring(0, commentLength));
 
                 let comment = '"' + commentBody;
@@ -44,12 +44,12 @@ module.exports.parse = async function reddit(event, censoredStrings) {
                 }
 
                 comment = comment + '"';
-                for (let i = 0; i < censoredStrings.length; i++) {
+                for (let i = 0; i < (censoredStrings.length + 3); i++) {
                     if (comment.includes(censoredStrings[i])) {
                         return;
                     }
                 }
-                event.reply(subreddit + " | " + comment);
+                event.reply(subreddit + " | " + comment + ` — /u/${author}`);
             } else {
                 for (let i = 0; i < censoredStrings.length; i++) {
                     if (parsedTitle.includes(censoredStrings[i])) {
