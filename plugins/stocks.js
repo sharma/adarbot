@@ -19,8 +19,13 @@ module.exports.search = async function stocks(event) {
                 marketCap
             } = response.data;
 
-            let change = parseFloat(response.data.change.toFixed(2));
-            let changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+            let change = "N/A";
+            let changePercent="(N/A)";
+
+            if (response.data.change && response.data.changePercent != null) {
+                change = parseFloat(response.data.change.toFixed(2));
+                changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+            }
 
             if (change < 0) {
                 change = c.red(change);
@@ -54,7 +59,7 @@ module.exports.search = async function stocks(event) {
 // Helper function for stock plugin to attach (K, M, B, T) to the market cap
 function formattedMCAP(num) {
     if (num === null) {
-        return null;
+        return "N/A";
     }
     if (num === 0) {
         return "0";
