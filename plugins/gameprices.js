@@ -3,9 +3,9 @@ const c = require("irc-colors");
 
 module.exports.search = async function gameprices(event) {
 
-  const game = event.message.replace(",gp ", "");
+  let game = event.message.replace(",gp ", "");
+  game = encodeURIComponent(game);
   let { price, gameName, shopName } = "";
-  let gameObj = [];
   const ITAD_API_KEY = process.env.ITAD_API_KEY;
   const query = `https://api.isthereanydeal.com/v02/search/search/?key=${ITAD_API_KEY}&q=${game}`;
   await axios
