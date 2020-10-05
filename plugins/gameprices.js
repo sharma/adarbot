@@ -21,7 +21,7 @@ module.exports.search = async function gameprices(event) {
       return;
     });
 
-const query2 = `https://api.isthereanydeal.com/v01/game/prices/?key=${ITAD_API_KEY}&plains=${plain}`;
+const query2 = `https://api.isthereanydeal.com/v01/game/prices/?key=${ITAD_API_KEY}&plains=${plain}&country=US`;
 
 await axios
   .get(query2)
