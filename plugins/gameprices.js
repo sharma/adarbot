@@ -7,7 +7,7 @@ module.exports.search = async function gameprices(event) {
   game = encodeURIComponent(game);
   let { price, gameName, shopName } = "";
   const ITAD_API_KEY = process.env.ITAD_API_KEY;
-  const query = `https://api.isthereanydeal.com/v02/search/search/?key=${ITAD_API_KEY}&q=${game}`;
+  const query = `https://api.isthereanydeal.com/v02/search/search/?key=${ITAD_API_KEY}&q=${game}&country=US`;
   await axios
     .get(query)
     .then(response => {
