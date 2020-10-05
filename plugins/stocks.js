@@ -20,7 +20,7 @@ module.exports.search = async function stocks(event) {
             } = response.data;
 
             let change = "N/A";
-            let changePercent="(N/A)";
+            let changePercent="(N/A%)";
 
             if (response.data.change && response.data.changePercent != null) {
                 change = parseFloat(response.data.change.toFixed(2));

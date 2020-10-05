@@ -2,7 +2,7 @@ const axios = require("axios");
 
 module.exports.search = async function gameprices(event) {
 
-  const game = event.message.replace("!gp ", "");
+  const game = event.message.replace(",gp ", "");
   const ITAD_API_KEY = process.env.ITAD_API_KEY;
   const query = "https://api.isthereanydeal.com/v01/search/search/?key=" + ITAD_API_KEY + "&q=" + game + "&region=us&limit=60&country=us";
   await axios
