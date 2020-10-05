@@ -18,6 +18,7 @@ module.exports.search = async function gameprices(event) {
     .catch(error => {
       console.log(error);
       event.reply(event.nick + ": Error finding game.");
+      return;
     });
 
 const query2 = `https://api.isthereanydeal.com/v01/game/prices/?key=${ITAD_API_KEY}&plains=${plain}`;
@@ -32,5 +33,6 @@ await axios
   .catch(error => {
     console.log(error);
     event.reply(event.nick + ": Error determining game price.");
+    return;
   })    
 }
