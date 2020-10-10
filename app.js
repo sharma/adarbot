@@ -87,17 +87,17 @@ bot.on("message", event => {
   }
 
   // Game prices plugin trigger
-  if (event.message.substring(0,3) === ",gp") {
+  if (event.message.substring(0,4) === ",gp ") {
     gameprices.search(event);
   }
 
   // Weather plugin trigger
-  if (event.message.substring(0,3) === ",we") {
+  if (event.message.substring(0,4) === ",we ") {
     weather.search(event);
   }
 
   // OpenCritic plugin trigger
-  if (event.message.substring(0,3) === ",oc") {
+  if (event.message.substring(0,4) === ",oc ") {
     opencritic.search(event);
   }
 });
