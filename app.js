@@ -71,6 +71,10 @@ bot.on("message", event => {
     return;
   }
 
+  if (event.message === ",help") {
+    event.reply(`${event.nick}: Commands: ,st - Stock prices | ,oc - OpenCritic game reviews | ,gp - Game prices`);
+  }
+
   // Stock plugin trigger
   if (event.message.substring(0,6).match(/^,st(ock)?/) ||
       event.message.substring(0,6).match(/^!st(ock)?/)) {
