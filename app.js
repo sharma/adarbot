@@ -71,6 +71,10 @@ bot.on("message", event => {
     return;
   }
 
+  if (event.message === ",help") {
+    event.reply(`${event.nick}: Commands: ,st - Stock prices | ,oc - OpenCritic game reviews | ,gp - Game prices`);
+  }
+
   // Stock plugin trigger
   if (event.message.substring(0,6).match(/^,st(ock)?/) ||
       event.message.substring(0,6).match(/^!st(ock)?/)) {
@@ -83,17 +87,17 @@ bot.on("message", event => {
   }
 
   // Game prices plugin trigger
-  if (event.message.substring(0,3) === ",gp") {
+  if (event.message.substring(0,4) === ",gp ") {
     gameprices.search(event);
   }
 
   // Weather plugin trigger
-  if (event.message.substring(0,3) === ",we") {
+  if (event.message.substring(0,4) === ",we ") {
     weather.search(event);
   }
 
   // OpenCritic plugin trigger
-  if (event.message.substring(0,3) === ",oc") {
+  if (event.message.substring(0,4) === ",oc ") {
     opencritic.search(event);
   }
 });
