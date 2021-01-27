@@ -15,17 +15,20 @@ module.exports.search = async function stocks(event) {
             let {
                 companyName,
                 symbol,
-                latestPrice,
+                extendedPrice,
                 marketCap
             } = response.data;
 
             let change = "N/A";
             let changePercent="(N/A%)";
+            
 
-            if (response.data.change && response.data.changePercent != null) {
-                change = parseFloat(response.data.change.toFixed(2));
-                changePercent = "(" + (100 * response.data.changePercent).toFixed(2) + "%)";
+            if (response.data.extendedChange && response.data.extendedChangePercent != null) {
+                change = parseFloat(response.data.extendedChange.toFixed(2));
+                changePercent = "(" + (100 * response.data.extendedChangePercent).toFixed(2) + "%)";
             }
+
+            console.log(change);
 
             if (change < 0) {
                 change = c.red(change);
@@ -41,7 +44,7 @@ module.exports.search = async function stocks(event) {
                 " | " +
                 c.bold(companyName) +
                 " | $" +
-                latestPrice.toFixed(2) +
+                extendedPrice.toFixed(2) +
                 " " +
                 change +
                 " " +
