@@ -21,11 +21,29 @@ module.exports.search = async function stocks(event) {
 
             let change = "N/A";
             let changePercent="(N/A%)";
-            
+            let price = 0;
 
-            if (response.data.extendedChange && response.data.extendedChangePercent != null) {
-                change = parseFloat(response.data.extendedChange.toFixed(2));
-                changePercent = "(" + (100 * response.data.extendedChangePercent).toFixed(2) + "%)";
+            if (response.data.extendedPriceTime && (response.data.latestUpdate < response.data.extendedPriceTime)) {
+                price = extendedPrice;
+                change = extendedChange;
+                changePercent = extendedChangePercent;
+            }
+
+            else if (response.data.latestSource === "Close" && response.data.iexRealtimePrice) {
+                price = response.data.iexRealtimePrice;
+                change = price - response.data.previousClose;
+                changePercent = response.data.changePercent;
+            }
+
+            else {
+                price = response.data.latestPrice;
+                change = response.data.change;
+                changePercent = response.data.changePercent;
+            }
+
+            if (change != "N/A" && changePercent != "(N/A%)") {
+                change = parseFloat(change.toFixed(2));
+                changePercent = "(" + (100 * changePercent).toFixed(2) + "%)";
             }
 
             if (change < 0) {
@@ -42,7 +60,7 @@ module.exports.search = async function stocks(event) {
                 " | " +
                 c.bold(companyName) +
                 " | $" +
-                extendedPrice.toFixed(2) +
+                price.toFixed(2) +
                 " " +
                 change +
                 " " +
