@@ -28,8 +28,6 @@ module.exports.search = async function stocks(event) {
                 changePercent = "(" + (100 * response.data.extendedChangePercent).toFixed(2) + "%)";
             }
 
-            console.log(change);
-
             if (change < 0) {
                 change = c.red(change);
                 changePercent = c.red(changePercent);
