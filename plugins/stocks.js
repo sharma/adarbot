@@ -18,36 +18,38 @@ module.exports.search = async function stocks(event) {
                 extendedPrice,
                 marketCap,
                 extendedChange,
-                extendedChangePercent
+                extendedPriceTime,
+                extendedChangePercent,
+                latestUpdate,
+                latestSource,
+                iexRealtimePrice
             } = response.data;
 
             let change = "N/A";
             let changePercent="(N/A%)";
             let price = 0;
 
-            if (response.data.extendedPriceTime && (response.data.latestUpdate < response.data.extendedPriceTime)) {
+            if (extendedPriceTime && (latestUpdate < extendedPriceTime)) {
                 price = extendedPrice;
                 change = extendedChange;
-                changePercent = extendedChangePercent;
             }
 
-            else if (response.data.latestSource === "Close" && response.data.iexRealtimePrice) {
+            else if (latestSource === "Close" && iexRealtimePrice) {
                 price = response.data.iexRealtimePrice;
                 change = price - response.data.previousClose;
-                changePercent = response.data.changePercent;
             }
 
             else {
                 price = response.data.latestPrice;
                 change = response.data.change;
-                changePercent = response.data.changePercent;
             }
 
-            console.log ("Price: " + price + " Change: " + change + " Percent: " + changePercent);
+            changePercent = 100 * change / (price - change);
+            changePercent = "(" + (changePercent).toFixed(2) + "%)";
+            price = price.toFixed(2);
 
             if (change != "N/A" && changePercent != "(N/A%)") {
                 change = parseFloat(change.toFixed(2));
-                changePercent = "(" + (100 * changePercent).toFixed(2) + "%)";
             }
 
             if (change < 0) {
@@ -64,7 +66,7 @@ module.exports.search = async function stocks(event) {
                 " | " +
                 c.bold(companyName) +
                 " | $" +
-                price.toFixed(2) +
+                price +
                 " " +
                 change +
                 " " +
