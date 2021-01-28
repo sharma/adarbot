@@ -16,7 +16,9 @@ module.exports.search = async function stocks(event) {
                 companyName,
                 symbol,
                 extendedPrice,
-                marketCap
+                marketCap,
+                extendedChange,
+                extendedChangePercent
             } = response.data;
 
             let change = "N/A";
@@ -40,6 +42,8 @@ module.exports.search = async function stocks(event) {
                 change = response.data.change;
                 changePercent = response.data.changePercent;
             }
+
+            console.log ("Price: " + price + " Change: " + change + " Percent: " + changePercent);
 
             if (change != "N/A" && changePercent != "(N/A%)") {
                 change = parseFloat(change.toFixed(2));
