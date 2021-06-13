@@ -48,7 +48,8 @@ bot.connect({
   host: IRC_HOST,
   port: IRC_PORT,
   nick: IRC_NICK,
-  username: IRC_USERNAME
+  username: IRC_USERNAME,
+  password: NICKSERV_PASS
 });
 
 // When the bot is shut down
@@ -58,9 +59,9 @@ bot.on("close", () => {
 
 // Identify with nickserv and join channel
 bot.on("registered", () => {
+  bot.say("nickserv", "identify " + NICKSERV_PASS); // Just in case IRC server doesn't accept auth via SASL
   console.log(`Connected to ${IRC_HOST}.`);
-  bot.say("nickserv", "identify " + NICKSERV_PASS);
-  bot.join(IRC_CHANNEL);
+  bot.join(IRC_CHANNEL)
   console.log(`Joined ${IRC_CHANNEL}.`);
 });
 
