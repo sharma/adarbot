@@ -10,7 +10,7 @@
     "dotenv": "^8.2.0",
     "he": "^1.2.0",
     "irc-colors": "^1.5.0",
-    "irc-framework": "^4.9.0"
+    "irc-framework": "^4.11.0"
   },
   "devDependencies": {
     "request": "^2.88.2"

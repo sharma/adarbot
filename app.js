@@ -1,7 +1,8 @@
-const fs = require('fs');
-const IRC = require("irc-framework");
 require("dotenv").config();
 require("colors");
+
+const fs = require('fs');
+const IRC = require("irc-framework");
 const gameprices = require('./plugins/gameprices.js');
 const stocks = require('./plugins/stocks.js');
 const reddit = require('./plugins/reddit.js');
@@ -52,17 +53,15 @@ bot.connect({
   password: NICKSERV_PASS
 });
 
+bot.on("registered", () => {   // Just in case IRC server doesn't accept auth via SASL
+  console.log(`Connected to ${IRC_HOST}.`);
+  bot.join(IRC_CHANNEL);
+  console.log(`Joined ${IRC_CHANNEL}.`);
+});
+
 // When the bot is shut down
 bot.on("close", () => {
   console.log("Connection closed.");
-});
-
-// Identify with nickserv and join channel
-bot.on("registered", () => {
-  bot.say("nickserv", "identify " + NICKSERV_PASS); // Just in case IRC server doesn't accept auth via SASL
-  console.log(`Connected to ${IRC_HOST}.`);
-  bot.join(IRC_CHANNEL)
-  console.log(`Joined ${IRC_CHANNEL}.`);
 });
 
 bot.on("message", event => {
