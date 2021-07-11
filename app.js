@@ -25,11 +25,15 @@ let {
   IRC_NICK,
   IRC_USERNAME,
   IRC_CHANNEL,
-  NICKSERV_PASS
+  NICKSERV_PASS,
+  ADMINS
 } = process.env;
 
 // Ignore messages from other bots in the channel
 let ignoredNicks = ["skybot", "buttebot"];
+
+// Load admins into an array
+let admins = ADMINS.split(" ");
 
 // Filter any lines from IRC with k-line words in them so the bot doesn't get banned
 let censoredStrings = [
@@ -59,6 +63,8 @@ bot.on("registered", () => {   // Just in case IRC server doesn't accept auth vi
   console.log(`Joined ${IRC_CHANNEL}.`);
 });
 
+
+
 // When the bot is shut down
 bot.on("close", () => {
   console.log("Connection closed.");
@@ -73,6 +79,11 @@ bot.on("message", event => {
 
   if (event.message === ",help") {
     event.reply(`${event.nick}: Commands: ,st - Stock prices | ,oc - OpenCritic game reviews | ,gp - Game prices`);
+  }
+
+  if ((event.message === ",rejoin") && (ADMINS.includes(event.nick)) && (event.type === "privmsg")) {
+    bot.join(IRC_CHANNEL);
+    console.log(`Rejoined ${IRC_CHANNEL}`);
   }
 
   // Stock plugin trigger
