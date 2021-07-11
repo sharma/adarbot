@@ -59,11 +59,10 @@ bot.connect({
 
 bot.on("registered", () => {   // Just in case IRC server doesn't accept auth via SASL
   console.log(`Connected to ${IRC_HOST}.`);
+  bot.whois(IRC_NICK);
   bot.join(IRC_CHANNEL);
   console.log(`Joined ${IRC_CHANNEL}.`);
 });
-
-
 
 // When the bot is shut down
 bot.on("close", () => {
