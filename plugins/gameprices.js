@@ -13,7 +13,6 @@ module.exports.search = async function gameprices(event) {
     .get(query)
     .then(response => {
       plain = response.data.data.results[0].plain;
-      console.log(plain);
       gameName = response.data.data.results[0].title;
       continueSearch = 1;
     })
@@ -31,9 +30,11 @@ const query2 = `https://api.isthereanydeal.com/v01/game/prices/?key=${ITAD_API_K
 await axios
   .get(query2)
   .then(response => {
-    price = response.data.data[plain].list[0].price_new;
+    price = parseFloat(response.data.data[plain].list[0].price_new).toFixed(2);
     shopName = response.data.data[plain].list[0].shop.name;
-    event.reply(event.nick + ": " + c.bold(gameName) + " - $" + price + " @ " + c.bold(shopName));
+    shopLink = response.data.data[plain].list[0].url;
+    
+    event.reply(`${event.nick}: ${c.bold(gameName)} - $${price} @ ${c.bold(shopName)} (${shopLink})`);
   })
   .catch(error => {
     console.log(error);
@@ -41,3 +42,4 @@ await axios
     return;
   })    
 }
+
