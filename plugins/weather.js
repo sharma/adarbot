@@ -37,11 +37,11 @@ module.exports.search = async function lookup(event) {
     await axios
         .get(query)
         .then(response => {
-            const tempC = parseInt(response.data.temp.value).toPrecision(3);
+            const tempC = parseFloat(response.data.temp.value).toFixed(1);
             const tempF = ((tempC) * (9/5) + 32).toFixed(1);
-            const humidity = response.data.humidity.value.toFixed(1);
-            const wind_speedKM = parseInt(response.data.wind_speed.value).toFixed(0);
-            const wind_speedM = ((wind_speedKM) / 1.6).toFixed(0);
+            const humidity = response.data.humidity.value.toFixed(0);
+            const wind_speedKM = parseFloat(response.data.wind_speed.value).toFixed(1);
+            const wind_speedM = ((wind_speedKM) / 1.6).toFixed(1);
             const air_quality = response.data.epa_health_concern.value;
             const precipitation = response.data.precipitation_type.value;
 
