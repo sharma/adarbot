@@ -30,8 +30,8 @@ module.exports.parse = async function reddit(event, censoredStrings) {
                 .replace(/\/$/, "")
                 .slice(-commentIDSize);
 
-            let parsedTitle = he.decode(title);
-            let subreddit = c.bold(subreddit_name_prefixed);
+            let parsedTitle = he.decode(title.replace(/\r?\n|\r/g, " "));
+            let subreddit = c.bold(subreddit_name_prefixed.replace(/\r?\n|\r/g, " "));
 
             if (commentIDFromURL === id) {
                 const commentLength = 330 - (author.length + subreddit_name_prefixed.length + 1);
