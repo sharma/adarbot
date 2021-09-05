@@ -2,22 +2,24 @@ const axios = require("axios");
 const c = require("irc-colors");
 const he = require("he");
 
-module.exports.parse = async function reddit(event, censoredStrings) {
-    const to_join = event.message.split(" ");
-    let i;
+const PATTERN = module.exports.PATTERN =
+    /(?<!\S)(?:https:\/\/)?(?:www\.)?reddit\.com\/\S*/;
 
-    for (i = 0; i < to_join.length; i++) {
-        if (to_join[i].includes("reddit.com")) {
-            if (!to_join[i].includes("http")) {
-                to_join[i] = "https://" + to_join[i];
-            }
-            break;
-        }
+module.exports = { hasLink, summarizeLinks };
+
+function hasLink(message) {
+    return PATTERN.test(message);
+}
+
+async function summarizeLinks(event, censoredStrings) {
+    const matches = event.message.match(PATTERN);
+    if (!matches.length) {
+        return;
     }
 
-    const query = to_join[i].split('?')[0] + ".json";
+    const url = matches[0].split('?')[0] + ".json";
     await axios
-        .get(query)
+        .get(url)
         .then(response => {
             const {
                 subreddit_name_prefixed,
@@ -26,7 +28,7 @@ module.exports.parse = async function reddit(event, censoredStrings) {
 
             const { id, body, author } = response.data[1].data.children[0].data;
             const commentIDSize = 7;
-            const commentIDFromURL = to_join[i]
+            const commentIDFromURL = url
                 .replace(/\/$/, "")
                 .slice(-commentIDSize);
 

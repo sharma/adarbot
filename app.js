@@ -89,8 +89,8 @@ bot.on("message", event => {
   }
 
   // Reddit plugin trigger
-  else if (event.message.match(/reddit.com/)) {
-    reddit.parse(event, censoredStrings);
+  else if (reddit.hasLink(event.message)) {
+    reddit.summarizeLinks(event, censoredStrings);
   }
 
   // Game prices plugin trigger
