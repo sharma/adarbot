@@ -40,35 +40,29 @@ async function summarizeLinksInner(event, censoredStrings) {
         title
     } = payload[0].data.children[0].data;
 
-    let parsedTitle = he.decode(title.replace(/\r?\n|\r/g, " "));
-    let subreddit = c.bold(subreddit_name_prefixed.replace(/\r?\n|\r/g, " "));
+    let subreddit = c.bold(cleanText(subreddit_name_prefixed, 100));
 
+    let reply;
     if (isComment(url, payload)) {
-        const { body, author } = payload[1].data.children[0].data;
-        const commentLength = 330 - (author.length + subreddit_name_prefixed.length + 1);
-        const commentBody = he.decode(body.replace(/\r?\n|\r/g, " ").substring(0, commentLength));
+        let { body, author } = payload[1].data.children[0].data;
+        author = cleanText(author, 100);
+        const length = 330 - (author.length + subreddit.length + 1);
+        body = he.decode(cleanText(body, length));
 
-        let comment = '"' + commentBody;
-
-        if (body.length > commentLength) {
-            comment = comment + "...";
-        }
-
-        comment = comment + '"';
-        for (let i = 0; i < (censoredStrings.length + 3); i++) {
-            if (comment.includes(censoredStrings[i])) {
-                return;
-            }
-        }
-        event.reply(subreddit + " | " + comment + ` — /u/${author}`);
+        reply = `${subreddit} | "${body}" — /u/${author}`;
     } else {
-        for (let i = 0; i < censoredStrings.length; i++) {
-            if (parsedTitle.includes(censoredStrings[i])) {
-                return;
-            }
-        }
-        event.reply(subreddit + " | " + parsedTitle);
+        const length = 330 - (subreddit.length + 1);
+        let parsedTitle = he.decode(cleanText(title, length));
+        reply = `${subreddit} | ${parsedTitle}`;
     }
+
+    const lowercaseReply = reply.toLowerCase();
+    if (censoredStrings.some(s => lowercaseReply.includes(s.toLowerCase()))) {
+        console.log(`bad content: ${reply}`);
+        return;
+    }
+
+    event.reply(reply);
 }
 
 function isComment(url, payload) {
@@ -87,4 +81,12 @@ function isComment(url, payload) {
     }
 
     return url.endsWith(data.id) || url.endsWith(data.id + '/');
+}
+
+function cleanText(s, maxSize = null) {
+    s = s.replace(/[\x00-\x20]+/g, ' ');
+    if (maxSize && s.length > maxSize) {
+        s = s.substring(0, maxSize) + "...";
+    }
+    return s;
 }
