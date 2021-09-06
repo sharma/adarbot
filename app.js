@@ -30,9 +30,6 @@ let {
   ADMINS
 } = process.env;
 
-// Ignore messages from other bots in the channel
-let ignoredNicks = ["skybot", "buttebot"];
-
 // Filter any lines from IRC with k-line words in them so the bot doesn't get banned
 let censoredStrings = [
   "DCC SEND",
@@ -70,7 +67,8 @@ bot.on("close", () => {
 bot.on("message", event => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
 
-  if (ignoredNicks.includes(event.nick)) {
+  // Don't respond to bots.
+  if (/bot$/i.test(event.nick)) {
     return;
   }
 
@@ -91,8 +89,8 @@ bot.on("message", event => {
   }
 
   // Reddit plugin trigger
-  else if (event.message.match(/reddit.com/)) {
-    reddit.parse(event, censoredStrings);
+  else if (reddit.hasLink(event.message)) {
+    reddit.summarizeLinks(event, censoredStrings);
   }
 
   // Game prices plugin trigger
