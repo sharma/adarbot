@@ -25,23 +25,26 @@ async function summarizeLinksInner(event, censoredStrings) {
         return;
     }
 
-    const url = matches[0].split('?')[0] + ".json";
-    const response = await axios.get(url);
+    const url = matches[0].split('?')[0];
+    const response = await axios.get(url + '.json');
+    const payload = response.data;
+
+    if (!Array.isArray(payload) || payload.length != 2
+        || payload[0].data.children.length != 1
+        || payload[0].data.children[0].kind != 't3') {
+        return;
+    }
+
     const {
         subreddit_name_prefixed,
         title
-    } = response.data[0].data.children[0].data;
-
-    const { id, body, author } = response.data[1].data.children[0].data;
-    const commentIDSize = 7;
-    const commentIDFromURL = url
-        .replace(/\/$/, "")
-        .slice(-commentIDSize);
+    } = payload[0].data.children[0].data;
 
     let parsedTitle = he.decode(title.replace(/\r?\n|\r/g, " "));
     let subreddit = c.bold(subreddit_name_prefixed.replace(/\r?\n|\r/g, " "));
 
-    if (commentIDFromURL === id) {
+    if (isComment(url, payload)) {
+        const { body, author } = payload[1].data.children[0].data;
         const commentLength = 330 - (author.length + subreddit_name_prefixed.length + 1);
         const commentBody = he.decode(body.replace(/\r?\n|\r/g, " ").substring(0, commentLength));
 
@@ -66,4 +69,22 @@ async function summarizeLinksInner(event, censoredStrings) {
         }
         event.reply(subreddit + " | " + parsedTitle);
     }
+}
+
+function isComment(url, payload) {
+    if (payload[1].data.children.length != 1) {
+        return false;
+    }
+
+    const comment = payload[1].data.children[0];
+    if (comment.kind != "t1") {
+        return false;
+    }
+    const data = comment.data;
+
+    if (typeof data.id != "string" || data.id.length == 0) {
+        return false;
+    }
+
+    return url.endsWith(data.id) || url.endsWith(data.id + '/');
 }
