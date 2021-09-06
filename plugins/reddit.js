@@ -83,10 +83,47 @@ function isComment(url, payload) {
     return url.endsWith(data.id) || url.endsWith(data.id + '/');
 }
 
+function truncateStringToByteSize(s, n) {
+    let b = Buffer.from(s);
+    if (b.length <= n) {
+        return s;
+    }
+    if (n <= 3) {
+      return '...';
+    }
+
+    b = b.slice(0, n - 3);
+    // don't truncate in the middle of a utf-8 codepoint
+    let i, r;
+    for (i = 1; i < b.length; ++i) {
+        const c = b[b.length-i];
+        if (c < 0b1000_0000) {
+            // ascii byte, ok
+            r = 1;
+        } else if (c < 0b1100_0000) {
+            // continuation byte, continue
+            continue;
+        } else if (c < 0b1110_0000) {
+            // start of a 2-byte codepoint
+            r = 2;
+        } else if (c < 0b1111_0000) {
+            r = 3
+        } else {
+            r = 4
+        }
+        break;
+    }
+    if (r !== i) {
+        // suffix can't be a complete codepoint, so drop it
+        b = b.slice(0, b.length - i);
+    }
+    return b.toString() + '...';
+}
+
 function cleanText(s, maxSize = null) {
     s = s.replace(/[\x00-\x20]+/g, ' ');
-    if (maxSize && s.length > maxSize) {
-        s = s.substring(0, maxSize) + "...";
+    if (maxSize) {
+        s = truncateStringToByteSize(s, maxSize);
     }
     return s;
 }
