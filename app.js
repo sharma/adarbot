@@ -8,6 +8,7 @@ const stocks = require('./plugins/stocks.js');
 const reddit = require('./plugins/reddit.js');
 const weather = require('./plugins/weather.js');
 const opencritic = require('./plugins/opencritic.js');
+const movies = require('./plugins/movies.js');
 
 // Make sure an .env file exists to pull config data from
 const path = './.env';
@@ -28,12 +29,6 @@ let {
   NICKSERV_PASS,
   ADMINS
 } = process.env;
-
-// Ignore messages from other bots in the channel
-let ignoredNicks = ["skybot", "buttebot"];
-
-// Load admins into an array
-let admins = ADMINS.split(" ");
 
 // Filter any lines from IRC with k-line words in them so the bot doesn't get banned
 let censoredStrings = [
@@ -72,7 +67,8 @@ bot.on("close", () => {
 bot.on("message", event => {
   console.log(`<${event.nick.bold.green}> ${event.message}`);
 
-  if (ignoredNicks.includes(event.nick)) {
+  // Don't respond to bots.
+  if (/bot$/i.test(event.nick)) {
     return;
   }
 
@@ -80,34 +76,39 @@ bot.on("message", event => {
     event.reply(`${event.nick}: Commands: ,st - Stock prices | ,oc - OpenCritic game reviews | ,gp - Game prices`);
   }
 
-  if ((event.message === ",rejoin") && (ADMINS.includes(event.nick)) && (event.type === "privmsg")) {
+  else if ((event.message === ",rejoin") && (ADMINS.includes(event.nick)) && (event.type === "privmsg")) {
+    bot.part(IRC_CHANNEL);
     bot.join(IRC_CHANNEL);
     console.log(`Rejoined ${IRC_CHANNEL}`);
   }
 
   // Stock plugin trigger
-  if (event.message.substring(0,6).match(/^,st(ock)?/) ||
+  else if (event.message.substring(0,6).match(/^,st(ock)?/) ||
       event.message.substring(0,6).match(/^!st(ock)?/)) {
     stocks.search(event);
   }
 
   // Reddit plugin trigger
-  if (event.message.match(/reddit.com/)) {
-    reddit.parse(event, censoredStrings);
+  else if (reddit.hasLink(event.message)) {
+    reddit.summarizeLinks(event, censoredStrings);
   }
 
   // Game prices plugin trigger
-  if (event.message.substring(0,4) === ",gp ") {
+  else if (event.message.substring(0,4) === ",gp ") {
     gameprices.search(event);
   }
 
   // Weather plugin trigger
-  if (event.message.substring(0,4) === ",we ") {
+  else if (event.message.substring(0,4) === ",we ") {
     weather.search(event);
   }
 
   // OpenCritic plugin trigger
-  if (event.message.substring(0,4) === ",oc ") {
+  else if (event.message.substring(0,4) === ",oc ") {
     opencritic.search(event);
+  }
+
+  else if (event.message.substring(0,4) === ",rt ") {
+    movies.search(event);
   }
 });
